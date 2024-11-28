@@ -1,5 +1,5 @@
 .cards {
-  border: 2px solid red;
+  border: 2px solid #dc3545;
   border-radius: 10px;
   height: 37rem;
 }
@@ -8,10 +8,11 @@
   border-radius: 10px 10px 0 0;
   height: 20rem;
   width: 20rem;
+  object-fit: cover;
 }
 
 .badge {
-  top: 10px;
+  top: 17.5rem;
   right: 20px;
   font-size: 17px;
 }

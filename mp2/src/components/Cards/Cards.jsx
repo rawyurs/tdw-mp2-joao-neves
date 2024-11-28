@@ -7,15 +7,15 @@ const Cards = ({ fetchedData }) => {
 
     if (fetchedData && fetchedData.length > 0) {
         display = fetchedData.map(x => {
-            let { _id, name, photo, occupation, status } = x;
+            let { _id, name, photo, status, portrayedBy } = x;
             return (
                 <div key={_id} className="col-4  mb-4 position-relative">
                     <div className={styles.cards}>
                         <img src={photo} alt="" className={`${styles.img} img-fluid`} />
                         <div style={{ padding: "10px" }} className="content">
                             <div className="fs-4 fw-bold mb-4">{name}</div>
-                            <div className="fs-6">Occupation</div>
-                            <div className="fs-5">{occupation}</div>
+                            <div className="fs-6">Portrayed By</div>
+                            <div className="fs-5">{portrayedBy}</div>
                         </div>
                     </div>
                     {(() => {

@@ -27,6 +27,7 @@ function App() {
     })();
   }, [search, pageNumber]);
 
+
   return (
     <div className="App">
       <h1 className="text-center ubuntu-medium my-5">

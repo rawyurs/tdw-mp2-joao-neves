@@ -11,9 +11,10 @@ function App() {
   let [search, setSearch] = useState("");
   let [status, setStatus] = useState("");
   let [gender, setGender] = useState("");
+  let [residence, setResidence] = useState("");
 
   let [fetchedData, updateFetchedData] = useState([]);
-  let [totalResults, setTotalResults] = useState(0);
+
 
   useEffect(() => {
     let api = `https://stranger-things-api.fly.dev/api/v1/characters?perPage=12&page=${pageNumber}`;
@@ -21,6 +22,8 @@ function App() {
     if (search) api += `&name=${search}`;
     if (status) api += `&status=${status}`;
     if (gender) api += `&gender=${gender}`;
+    if (residence) api += `&residence=${residence}`;
+
 
     (async function () {
       try {
@@ -33,14 +36,14 @@ function App() {
         }
 
         updateFetchedData(data);
-        setTotalResults(data.length || 0);
+
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
         updateFetchedData([]);
-        setTotalResults(0);
+
       }
     })();
-  }, [search, pageNumber, status, gender]);
+  }, [search, pageNumber, status, gender, residence]);
 
   return (
     <div className="App">
@@ -58,6 +61,7 @@ function App() {
             setPageNumber={setPageNumber}
             setStatus={setStatus}
             setGender={setGender}
+            setResidence={setResidence}
           />
           <div className="col-8">
             <div className="row">

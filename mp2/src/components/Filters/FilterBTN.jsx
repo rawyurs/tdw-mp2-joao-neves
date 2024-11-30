@@ -3,7 +3,7 @@ import React from 'react'
 const FilterBTN = ({ name, index, items, task, setPageNumber }) => {
     return (
         <div>
-            <style jsx>
+            <style>
                 {`
                 .x:checked + label {
                     background-color: #dc3545;

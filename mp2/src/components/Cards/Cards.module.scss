@@ -7,7 +7,7 @@
 .img {
   border-radius: 10px 10px 0 0;
   height: 20rem;
-  width: 20rem;
+  width: 22rem;
   object-fit: cover;
 }
 
@@ -15,4 +15,31 @@
   top: 17.5rem;
   right: 20px;
   font-size: 17px;
+}
+
+@media (max-width: 900px) {
+  .img {
+    border-radius: 10px 10px 0 0;
+    height: 20rem;
+    width: 27rem;
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 770px) {
+  .img {
+    border-radius: 10px 10px 0 0;
+    height: 20rem;
+    width: 32rem;
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 500px) {
+  .img {
+    border-radius: 10px 10px 0 0;
+    height: 20rem;
+    width: 25rem;
+    object-fit: cover;
+  }
 }

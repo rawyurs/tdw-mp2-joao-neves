@@ -15,8 +15,8 @@ const Cards = ({ fetchedData, page }) => {
                 <Link
                     style={{ texDecoration: "none" }}
                     to={`${page}${_id}`}
-                    key={_id} className="col-4  mb-4 position-relative text-dark">
-                    <div className={styles.cards}>
+                    key={_id} className="col-lg-4 col-md-6 col-12 mb-4 position-relative text-dark">
+                    <div className={`${styles.cards} d-flex flex-column`}>
                         <img src={photo} alt="" className={`${styles.img} img-fluid`} />
                         <div style={{ padding: "10px" }} className="content">
                             <div className="fs-4 fw-bold mb-4">{name}</div>

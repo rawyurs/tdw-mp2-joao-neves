@@ -1,15 +1,21 @@
 import React from 'react'
 import styles from './Cards.module.scss'
+import { Link } from 'react-router-dom';
 
 
-const Cards = ({ fetchedData }) => {
+const Cards = ({ fetchedData, page }) => {
     let display;
 
     if (fetchedData && fetchedData.length > 0) {
         display = fetchedData.map(x => {
             let { _id, name, photo, status, portrayedBy } = x;
             return (
-                <div key={_id} className="col-4  mb-4 position-relative">
+
+
+                <Link
+                    style={{ texDecoration: "none" }}
+                    to={`${page}${_id}`}
+                    key={_id} className="col-4  mb-4 position-relative text-dark">
                     <div className={styles.cards}>
                         <img src={photo} alt="" className={`${styles.img} img-fluid`} />
                         <div style={{ padding: "10px" }} className="content">
@@ -35,7 +41,7 @@ const Cards = ({ fetchedData }) => {
                             )
                         }
                     })()}
-                </div>
+                </Link>
             );
         });
     } else {

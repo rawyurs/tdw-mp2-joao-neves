@@ -5,8 +5,34 @@ import Filters from "./components/Filters/Filters";
 import Cards from "./components/Cards/Cards";
 import Pagination from "./components/Pagination/Pagination";
 import Search from "./components/Search/Search";
+import Navbar from "./components/Navbar/Navbar";
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Episodes from "./Pages/Episodes";
+import Location from "./Pages/Location";
+import CardsDetails from "./components/Cards/CardsDetails";
 
 function App() {
+  return (
+    <Router>
+      <div className="App">
+        <Navbar />
+      </div>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/:id" element={<CardsDetails />} />
+
+        <Route path="/episodes" element={<Episodes />} />
+        <Route path="/episode/:id" element={<CardsDetails />} />
+
+        <Route path="/location" element={<Location />} />
+      </Routes>
+    </Router>
+  )
+}
+
+const Home = () => {
   let [pageNumber, setPageNumber] = useState(1);
   let [search, setSearch] = useState("");
   let [status, setStatus] = useState("");
@@ -120,12 +146,9 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="text-center ubuntu-medium my-5">
-        Stranger Things <span className="text-danger">WiKi</span>
-      </h1>
 
+      <h1 className="text-center mb-4">Characters</h1>
       <Search setPageNumber={setPageNumber} setSearch={setSearch} />
-
       <div className="container">
         <div className="row">
           <Filters
@@ -136,7 +159,7 @@ function App() {
           />
           <div className="col-8">
             <div className="row">
-              <Cards fetchedData={fetchedData} />
+              <Cards page="/" fetchedData={fetchedData} />
             </div>
           </div>
         </div>

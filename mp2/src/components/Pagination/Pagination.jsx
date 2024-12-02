@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from './Pagination.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPageNumber } from '../../redux/slices/filtersSlice';
 
-const Pagination = ({ pageNumber, setPageNumber, totalPages }) => {
+const Pagination = () => {
+    const dispatch = useDispatch();
+    const { pageNumber, totalPages, filteredDataCount } = useSelector(state => state.filters);
 
     let [width, setWidth] = useState(window.innerWidth);
 
@@ -16,21 +20,20 @@ const Pagination = ({ pageNumber, setPageNumber, totalPages }) => {
     return (
         <>
             <style>
-
                 {`
                 @media (max-width: 768px){
                     .next, .prev{
                     display:none;
                     }
-                    .pagtination{
-                    font.size: 14px;
+                    .pagination{
+                    font-size: 14px;
                     }
                 }
                 `}
             </style>
             <ReactPaginate
                 className={`pagination justify-content-center gap-4 my-4 ${styles.pagination}`}
-                forcePage={pageNumber === 1 ? 0 : pageNumber - 1}  // Ajuste conforme a página atual
+                forcePage={pageNumber === 1 ? 0 : pageNumber - 1}
                 previousLabel='Previous'
                 nextLabel='Next'
                 nextClassName='btn btn-danger next'
@@ -41,9 +44,9 @@ const Pagination = ({ pageNumber, setPageNumber, totalPages }) => {
                 marginPagesDisplayed={width < 576 ? 1 : 2}
                 activeClassName='active'
                 onPageChange={(data) => {
-                    setPageNumber(data.selected + 1);  // Atualizando a página selecionada
+                    dispatch(setPageNumber(data.selected + 1));
                 }}
-                pageCount={totalPages}  // Número total de páginas calculado dinamicamente
+                pageCount={totalPages}
             />
         </>
     );

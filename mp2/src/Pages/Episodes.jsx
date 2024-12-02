@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Cards from "../components/Cards/Cards";
 import InputGroup from "../components/Filters/Category/InputGroup";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetCharactersByEpisodeQuery } from "../redux/services/api";
+import { setCharactersByEpisode, setEpisodeId } from "../redux/slices/episodesSlice";
 
 const Episodes = () => {
-    let [characters, setCharacters] = useState([]);
-    let [id, setID] = useState(1);
-
-    let api = `https://stranger-things-api.fly.dev/api/v1/characters?appearsInEpisodes=${id}`;
+    const dispatch = useDispatch();
+    const { id, characters } = useSelector(state => state.episodes);
+    const { data, error, isLoading } = useGetCharactersByEpisodeQuery(id);
 
     useEffect(() => {
-        const fetchCharacters = async () => {
-            try {
-                const response = await fetch(api);
-                const data = await response.json();
-                setCharacters(data);
-            } catch (error) {
-                console.error("Failed to fetch characters:", error);
-            }
-        };
+        if (data) {
+            dispatch(setCharactersByEpisode(data));
+        }
+    }, [data, dispatch]);
 
-        fetchCharacters();
-    }, [api]);
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
         <div className="container">
@@ -31,7 +28,7 @@ const Episodes = () => {
                 <div className="col-lg-3 col-12 mb-4">
                     <div className="text-center mb-4">
                         <h4 className="text-center mb-4">Pick Episodes</h4>
-                        <InputGroup setID={setID} name="Episode" total={25} />
+                        <InputGroup setID={(newID) => dispatch(setEpisodeId(newID))} name="Episode" total={25} />
                     </div>
                 </div>
                 <div className="col-lg-8 col-12">

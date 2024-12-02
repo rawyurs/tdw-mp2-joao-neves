@@ -1,7 +1,6 @@
-import React from 'react'
-import styles from './Cards.module.scss'
+import React from 'react';
+import styles from './Cards.module.scss';
 import { Link } from 'react-router-dom';
-
 
 const Cards = ({ fetchedData, page }) => {
     let display;
@@ -10,10 +9,8 @@ const Cards = ({ fetchedData, page }) => {
         display = fetchedData.map(x => {
             let { _id, name, photo, status, portrayedBy } = x;
             return (
-
-
                 <Link
-                    style={{ texDecoration: "none" }}
+                    style={{ textDecoration: "none" }}
                     to={`${page}${_id}`}
                     key={_id} className="col-lg-4 col-md-6 col-12 mb-4 position-relative text-dark">
                     <div className={`${styles.cards} d-flex flex-column`}>
@@ -28,17 +25,15 @@ const Cards = ({ fetchedData, page }) => {
                         if (status === "Deceased") {
                             return (
                                 <div className={`${styles.badge} position-absolute badge bg-danger`}>{status}</div>
-                            )
-                        }
-                        else if (status === "Alive") {
+                            );
+                        } else if (status === "Alive") {
                             return (
                                 <div className={`${styles.badge} position-absolute badge bg-success`}>{status}</div>
-                            )
-                        }
-                        else {
+                            );
+                        } else {
                             return (
                                 <div className={`${styles.badge} position-absolute badge bg-secondary`}>{status}</div>
-                            )
+                            );
                         }
                     })()}
                 </Link>

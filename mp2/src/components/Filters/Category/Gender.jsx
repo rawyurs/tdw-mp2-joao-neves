@@ -1,9 +1,12 @@
 import React from 'react'
 import FilterBTN from '../FilterBTN'
+import { useDispatch } from 'react-redux';
+import { setGender } from '../../../redux/slices/filtersSlice';
 
+const Gender = () => {
+    const dispatch = useDispatch();
+    let genders = ["Female", "Male", "Unknown"];
 
-const Gender = ({ setPageNumber, setGender }) => {
-    let genders = ["Female", "Male", "Unknown"]
     return (
         <div className="accordion-item">
             <h2 className="accordion-header">
@@ -14,7 +17,7 @@ const Gender = ({ setPageNumber, setGender }) => {
             <div id="collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionExample">
                 <div className="accordion-body d-flex flex-wrap gap-3">
                     {genders.map((items, index) => (
-                        <FilterBTN task={setGender} setPageNumber={setPageNumber} key={index} name="gender" index={index} items={items} />
+                        <FilterBTN task={(value) => dispatch(setGender(value))} key={index} name="gender" index={index} items={items} />
                     ))}
                 </div>
             </div>
@@ -22,4 +25,4 @@ const Gender = ({ setPageNumber, setGender }) => {
     )
 }
 
-export default Gender
+export default Gender;

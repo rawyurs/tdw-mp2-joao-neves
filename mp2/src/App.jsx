@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap";
 import Filters from "./components/Filters/Filters";
@@ -6,11 +6,13 @@ import Cards from "./components/Cards/Cards";
 import Pagination from "./components/Pagination/Pagination";
 import Search from "./components/Search/Search";
 import Navbar from "./components/Navbar/Navbar";
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Episodes from "./Pages/Episodes";
 import Location from "./Pages/Location";
 import CardsDetails from "./components/Cards/CardsDetails";
+import { useSelector, useDispatch } from 'react-redux';
+import { useGetCharactersQuery } from './redux/services/api';
+import { setPageNumber, setFilteredData, setTotalPages } from './redux/slices/filtersSlice';
 
 function App() {
   return (
@@ -18,160 +20,79 @@ function App() {
       <div className="App">
         <Navbar />
       </div>
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:id" element={<CardsDetails />} />
-
         <Route path="/episodes" element={<Episodes />} />
         <Route path="/episode/:id" element={<CardsDetails />} />
-
         <Route path="/location" element={<Location />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
 const Home = () => {
-  let [pageNumber, setPageNumber] = useState(1);
-  let [search, setSearch] = useState("");
-  let [status, setStatus] = useState("");
-  let [gender, setGender] = useState("");
-  let [residence, setResidence] = useState("");
+  const dispatch = useDispatch();
+  const { pageNumber, search, status, gender, residence } = useSelector(state => state.filters);
 
-  let [fetchedData, updateFetchedData] = useState([]);
-  let [filteredDataCount, setFilteredDataCount] = useState(0); // Contador de itens filtrados
-  const totalItems = 108; // Total conhecido de itens
-  const itemsPerPage = 12; // Número de itens por página
+  const { data: fetchedData = [], error, isLoading } = useGetCharactersQuery({ perPage: 12, page: pageNumber, search, status, gender, residence });
 
-  // Função para calcular o número total de páginas
-  const calculateTotalPages = (totalItems) => {
-    return Math.ceil(totalItems / itemsPerPage);
-  };
-
-  // Função para buscar o número total de itens com filtros aplicados
-  const fetchTotalItems = async () => {
-    let api = `https://stranger-things-api.fly.dev/api/v1/characters`;
-
-    let query = [];
-    if (search) query.push(`name=${search}`);
-    if (status) query.push(`status=${status}`);
-    if (gender) query.push(`gender=${gender}`);
-    if (residence) query.push(`residence=${residence}`);
-
-    if (query.length > 0) api += `?${query.join("&")}`;
-
-    try {
-      const response = await fetch(api);
-      const data = await response.json();
-      // Atualiza o total filtrado de itens
-      setFilteredDataCount(data.length);
-      console.log("Total de Itens Filtrados:", data.length); // Verificação
-
-      // Verifica e ajusta a paginação se necessário
-      if (pageNumber > 1 && data.length < itemsPerPage * (pageNumber - 1)) {
-        setPageNumber(1); // Reseta para a página 1 se a página atual não tiver resultados
-      }
-    } catch (error) {
-      console.error("Erro ao buscar dados filtrados:", error);
-      setFilteredDataCount(0);
+  useEffect(() => {
+    if (fetchedData && fetchedData.length > 0) {
+      dispatch(setFilteredData(fetchedData));
     }
-  };
+  }, [fetchedData, dispatch]);
 
-  // Função para buscar os dados da API com paginação
-  const fetchData = async () => {
-    let api = `https://stranger-things-api.fly.dev/api/v1/characters?perPage=${itemsPerPage}&page=${pageNumber}`;
+  useEffect(() => {
+    const fetchTotalItems = async () => {
+      let totalDataCount = 0;
+      let page = 1;
+      let moreData = true;
 
-    let query = [];
-    if (search) query.push(`name=${search}`);
-    if (status) query.push(`status=${status}`);
-    if (gender) query.push(`gender=${gender}`);
-    if (residence) query.push(`residence=${residence}`);
+      while (moreData) {
+        const response = await fetch(`https://stranger-things-api.fly.dev/api/v1/characters?${status ? `status=${status}&` : ""}${gender ? `gender=${gender}&` : ""}${residence ? `residence=${residence}&` : ""}${search ? `name=${search}&` : ""}perPage=12&page=${page}`);
+        const data = await response.json();
+        totalDataCount += data.length;
 
-    if (query.length > 0) api += `&${query.join("&")}`;
-
-    try {
-      const response = await fetch(api);
-      let data = await response.json();
-
-      // Lógica de filtragem por género
-      if (gender) {
-        data = data.filter(
-          (character) => character.gender.toLowerCase() === gender.toLowerCase()
-        );
-      }
-
-      // Exceção para filtros "Alive", "Deceased", "Female" e "Male"
-      if (status === "Alive" || status === "Deceased" || gender === "Female" || gender === "Male") {
-        let totalData = [];
-        let page = 1;
-        let moreData = true;
-
-        while (moreData) {
-          const totalDataResponse = await fetch(`https://stranger-things-api.fly.dev/api/v1/characters?${status ? `status=${status}&` : ""}${gender ? `gender=${gender}&` : ""}perPage=${itemsPerPage}&page=${page}`);
-          const totalDataPage = await totalDataResponse.json();
-          totalData = totalData.concat(totalDataPage);
-
-          if (totalDataPage.length < itemsPerPage) {
-            moreData = false;
-          } else {
-            page++;
-          }
+        if (data.length < 12) {
+          moreData = false;
+        } else {
+          page++;
         }
-
-        setFilteredDataCount(totalData.length);
       }
 
-      updateFetchedData(data);
-      console.log("Dados Buscados:", data); // Verificação
-    } catch (error) {
-      console.error("Erro ao buscar dados:", error);
-      updateFetchedData([]);
-    }
-  };
+      dispatch(setTotalPages(Math.ceil(totalDataCount / 12)));
+    };
 
-  useEffect(() => {
     fetchTotalItems();
-  }, [search, status, gender, residence]);
+  }, [search, status, gender, residence, dispatch]);
 
-  useEffect(() => {
-    fetchData();
-  }, [pageNumber, search, status, gender, residence]);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
-  const totalPages = search || status || gender || residence
-    ? calculateTotalPages(filteredDataCount)
-    : calculateTotalPages(totalItems);
-
-  console.log("Total de Páginas:", totalPages); // Verificação
+  // Lógica de filtragem por género
+  let filteredData = fetchedData;
+  if (gender) {
+    filteredData = fetchedData.filter(character => character.gender && character.gender.toLowerCase() === gender.toLowerCase());
+  }
 
   return (
     <div className="App">
-
       <h1 className="text-center mb-4">Characters</h1>
-      <Search setPageNumber={setPageNumber} setSearch={setSearch} />
+      <Search />
       <div className="container">
         <div className="row">
-          <Filters
-            setPageNumber={setPageNumber}
-            setStatus={setStatus}
-            setGender={setGender}
-            setResidence={setResidence}
-          />
+          <Filters />
           <div className="col-lg-8 col-12">
             <div className="row">
-              <Cards page="/" fetchedData={fetchedData} />
+              <Cards page="/" fetchedData={filteredData} />
             </div>
           </div>
         </div>
       </div>
-
-      <Pagination
-        pageNumber={pageNumber}
-        setPageNumber={setPageNumber}
-        totalPages={totalPages}
-      />
+      <Pagination />
     </div>
   );
-}
+};
 
 export default App;

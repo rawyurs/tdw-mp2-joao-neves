@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useGetCharacterByIdQuery } from '../../redux/services/api';
+import { setCharacterDetails } from '../../redux/slices/detailsSlice';
 
 const CardsDetails = () => {
     let { id } = useParams();
-    let [fetchedData, updateFetchedData] = useState([]);
-    let { name, photo, status, gender, residence, affiliation, aliases, born, eyeColor, hairColor, occupation, otherRelations } = fetchedData
-
-
-    let api = `https://stranger-things-api.fly.dev/api/v1/characters/${id}`;
+    const dispatch = useDispatch();
+    const { characterDetails } = useSelector(state => state.details);
+    const { data, error, isLoading } = useGetCharacterByIdQuery(id);
 
     useEffect(() => {
-        (async function () {
-            let data = await fetch(api).then((res) => res.json());
-            updateFetchedData(data);
-        })();
-    }, [api]);
+        if (data) {
+            dispatch(setCharacterDetails(data));
+        }
+    }, [data, dispatch]);
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+    const { name, photo, status, gender, residence, affiliation, aliases, born, eyeColor, hairColor, occupation, otherRelations } = characterDetails;
 
     return (
         <div className="container d-flex justify-content-center">
@@ -26,27 +31,16 @@ const CardsDetails = () => {
                 {(() => {
                     if (status === "Deceased") {
                         return (
-                            <div className="badge bg-danger fs-5"
-                            >
-                                {status}
-                            </div>
-                        )
-                    }
-                    else if (status === "Alive") {
+                            <div className="badge bg-danger fs-5">{status}</div>
+                        );
+                    } else if (status === "Alive") {
                         return (
-                            <div className="badge bg-success fs-5"
-                            >
-                                {status}
-                            </div>
-                        )
-                    }
-                    else {
+                            <div className="badge bg-success fs-5">{status}</div>
+                        );
+                    } else {
                         return (
-                            <div className="badge bg-secondary fs-5"
-                            >
-                                {status}
-                            </div>
-                        )
+                            <div className="badge bg-secondary fs-5">{status}</div>
+                        );
                     }
                 })()}
 
@@ -90,7 +84,7 @@ const CardsDetails = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default CardsDetails
+export default CardsDetails;

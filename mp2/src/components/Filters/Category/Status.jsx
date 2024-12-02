@@ -1,8 +1,12 @@
 import React from 'react';
 import FilterBTN from '../FilterBTN';
+import { useDispatch } from 'react-redux';
+import { setStatus } from '../../../redux/slices/filtersSlice';
 
-const Status = ({ setStatus, setPageNumber }) => {
+const Status = () => {
+    const dispatch = useDispatch();
     let status = ["Alive", "Deceased", "Unknown"];
+
     return (
         <div className="accordion-item">
             <h2 className="accordion-header">
@@ -13,11 +17,11 @@ const Status = ({ setStatus, setPageNumber }) => {
             <div id="collapseThree" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                 <div className="accordion-body d-flex flex-wrap gap-3">
                     {status.map((items, index) => (
-                        <FilterBTN task={setStatus} setPageNumber={setPageNumber} key={index} name="status" index={index} items={items} />
+                        <FilterBTN task={(value) => dispatch(setStatus(value))} key={index} name="status" index={index} items={items} />
                     ))}
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
 

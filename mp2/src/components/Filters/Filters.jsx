@@ -2,13 +2,16 @@ import React from 'react'
 import Gender from './Category/Gender';
 import Status from './Category/Status';
 import Residences from './Category/Residences';
+import { useDispatch } from 'react-redux';
+import { clearFilters } from '../../redux/slices/filtersSlice';
 
+const Filters = () => {
+    const dispatch = useDispatch();
 
-const Filters = ({ setStatus, setPageNumber, setGender, setResidence }) => {
-
-    let clear = () => {
-        window.location.reload(false);
+    const clear = () => {
+        dispatch(clearFilters());
     }
+
     return (
         <div className='col-lg-3 col-12 mb-5'>
             <div className="text-center fw-bold fs-4 mb-2">Filters</div>
@@ -18,13 +21,11 @@ const Filters = ({ setStatus, setPageNumber, setGender, setResidence }) => {
                 Clear Filters
             </div>
 
-
             <div className="accordion" id="accordionExample">
-                <Status setPageNumber={setPageNumber} setStatus={setStatus} />
-                <Residences setPageNumber={setPageNumber} setResidence={setResidence} />
-                <Gender setGender={setGender} setPageNumber={setPageNumber} />
+                <Status />
+                <Residences />
+                <Gender />
             </div>
-
         </div>
     )
 }

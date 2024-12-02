@@ -1,9 +1,13 @@
-import React from 'react'
-import FilterBTN from '../FilterBTN'
+import React from 'react';
+import FilterBTN from '../FilterBTN';
+import { useDispatch } from 'react-redux';
+import { setResidence } from '../../../redux/slices/filtersSlice';
 
-const Residences = ({ setPageNumber, setResidence }) => {
+const Residences = () => {
+    const dispatch = useDispatch();
 
-    let residences = ["Hawkins, Indiana",
+    let residences = [
+        "Hawkins, Indiana",
         "Indianapolis",
         "Chicago, Illinois",
         "Maple Street",
@@ -12,7 +16,9 @@ const Residences = ({ setPageNumber, setResidence }) => {
         "Rookwood Institute",
         "California",
         "Wheeler house",
-        "unknown"]
+        "unknown"
+    ];
+
     return (
         <div className="accordion-item">
             <h2 className="accordion-header">
@@ -23,12 +29,13 @@ const Residences = ({ setPageNumber, setResidence }) => {
             <div id="collapseTwo" className="accordion-collapse collapse" data-bs-parent="#accordionExample">
                 <div className="accordion-body d-flex flex-wrap gap-3">
                     {residences.map((items, index) => (
-                        <FilterBTN task={setResidence} setPageNumber={setPageNumber} key={index} name="residences" index={index} items={items} />
+                        <FilterBTN task={(value) => dispatch(setResidence(value))} key={index} name="residences" index={index} items={items} />
                     ))}
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Residences
+export default Residences;
+

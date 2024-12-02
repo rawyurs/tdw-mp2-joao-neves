@@ -6,13 +6,17 @@ import Cards from "./components/Cards/Cards";
 import Pagination from "./components/Pagination/Pagination";
 import Search from "./components/Search/Search";
 import Navbar from "./components/Navbar/Navbar";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Episodes from "./Pages/Episodes";
 import About from "./Pages/About";
 import CardsDetails from "./components/Cards/CardsDetails";
-import { useSelector, useDispatch } from 'react-redux';
-import { useGetCharactersQuery } from './redux/services/api';
-import { setPageNumber, setFilteredData, setTotalPages } from './redux/slices/filtersSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { useGetCharactersQuery } from "./redux/services/api";
+import {
+  setPageNumber,
+  setFilteredData,
+  setTotalPages,
+} from "./redux/slices/filtersSlice";
 
 function App() {
   return (
@@ -33,9 +37,22 @@ function App() {
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { pageNumber, search, status, gender, residence } = useSelector(state => state.filters);
+  const { pageNumber, search, status, gender, residence } = useSelector(
+    (state) => state.filters,
+  );
 
-  const { data: fetchedData = [], error, isLoading } = useGetCharactersQuery({ perPage: 12, page: pageNumber, search, status, gender, residence });
+  const {
+    data: fetchedData = [],
+    error,
+    isLoading,
+  } = useGetCharactersQuery({
+    perPage: 12,
+    page: pageNumber,
+    search,
+    status,
+    gender,
+    residence,
+  });
 
   useEffect(() => {
     if (fetchedData && fetchedData.length > 0) {
@@ -50,7 +67,9 @@ const Home = () => {
       let moreData = true;
 
       while (moreData) {
-        const response = await fetch(`https://stranger-things-api.fly.dev/api/v1/characters?${status ? `status=${status}&` : ""}${gender ? `gender=${gender}&` : ""}${residence ? `residence=${residence}&` : ""}${search ? `name=${search}&` : ""}perPage=12&page=${page}`);
+        const response = await fetch(
+          `https://stranger-things-api.fly.dev/api/v1/characters?${status ? `status=${status}&` : ""}${gender ? `gender=${gender}&` : ""}${residence ? `residence=${residence}&` : ""}${search ? `name=${search}&` : ""}perPage=12&page=${page}`,
+        );
         const data = await response.json();
         totalDataCount += data.length;
 
@@ -73,7 +92,11 @@ const Home = () => {
   // Lógica de filtragem por género
   let filteredData = fetchedData;
   if (gender) {
-    filteredData = fetchedData.filter(character => character.gender && character.gender.toLowerCase() === gender.toLowerCase());
+    filteredData = fetchedData.filter(
+      (character) =>
+        character.gender &&
+        character.gender.toLowerCase() === gender.toLowerCase(),
+    );
   }
 
   return (

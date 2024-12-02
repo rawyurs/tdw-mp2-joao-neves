@@ -22,7 +22,7 @@ const Episodes = () => {
     return (
         <div className="container">
             <div className="row mb-3">
-                <h1 className="text-center mb-3">Episode - <span className="text-danger">{id}</span></h1>
+                <h1 className="text-center mb-3">Characters in Episode - <span className="text-danger">{id}</span></h1>
             </div>
             <div className="row">
                 <div className="col-lg-3 col-12 mb-4">

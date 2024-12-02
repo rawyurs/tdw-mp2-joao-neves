@@ -8,7 +8,7 @@ import Search from "./components/Search/Search";
 import Navbar from "./components/Navbar/Navbar";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Episodes from "./Pages/Episodes";
-import Location from "./Pages/Location";
+import About from "./Pages/About";
 import CardsDetails from "./components/Cards/CardsDetails";
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetCharactersQuery } from './redux/services/api';
@@ -25,7 +25,7 @@ function App() {
         <Route path="/:id" element={<CardsDetails />} />
         <Route path="/episodes" element={<Episodes />} />
         <Route path="/episode/:id" element={<CardsDetails />} />
-        <Route path="/location" element={<Location />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </Router>
   );
@@ -78,7 +78,7 @@ const Home = () => {
 
   return (
     <div className="App">
-      <h1 className="text-center mb-4">Characters</h1>
+      <h1 className="text-center mb-4 ">Characters</h1>
       <Search />
       <div className="container">
         <div className="row">

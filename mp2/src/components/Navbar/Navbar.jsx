@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import logo from '../../images/logo-st.png'
 import '../../App.css';
 
 const Navbar = () => {
@@ -7,7 +8,7 @@ const Navbar = () => {
         <nav className="navbar navbar-expand-lg bg-body-tertiary mb-4">
             <div className="container">
                 <Link to="/" className="fs-3 ubuntu-medium navbar-brand">
-                    Stranger Things <span className="text-danger">WiKi</span>
+                    <img className="logo" src={logo} alt="" />
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 
@@ -32,8 +33,8 @@ const Navbar = () => {
                     <NavLink to="/episodes" className="nav-link">
                         Episodes
                     </NavLink>
-                    <NavLink to="/location" className="nav-link">
-                        Location
+                    <NavLink to="/about" className="nav-link">
+                        About
                     </NavLink>
                 </div>
             </div>

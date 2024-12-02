@@ -6,7 +6,7 @@ import { setPageNumber } from "../../redux/slices/filtersSlice";
 
 const Pagination = () => {
   const dispatch = useDispatch();
-  const { pageNumber, totalPages, filteredDataCount } = useSelector(
+  const { pageNumber, totalPages } = useSelector(
     (state) => state.filters,
   );
 

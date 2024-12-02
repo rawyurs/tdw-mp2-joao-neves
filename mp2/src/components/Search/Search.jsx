@@ -7,14 +7,15 @@ import { debounce } from "lodash";
 const Search = () => {
   const dispatch = useDispatch();
 
-  // Função de debounce para evitar múltiplas chamadas rápidas
-  const handleSearch = useCallback(
-    debounce((value) => {
-      dispatch(setPageNumber(1));
-      dispatch(setSearch(value));
-    }, 300),
-    [dispatch],
-  );
+  // Função de debounce definida fora do hook useCallback para evitar dependências desconhecidas
+  const debouncedDispatch = debounce((value) => {
+    dispatch(setPageNumber(1));
+    dispatch(setSearch(value));
+  }, 300);
+
+  const handleSearch = useCallback((value) => {
+    debouncedDispatch(value);
+  }, [debouncedDispatch]);
 
   const onChange = (e) => {
     handleSearch(e.target.value);

@@ -13,7 +13,6 @@ import CardsDetails from "./components/Cards/CardsDetails";
 import { useSelector, useDispatch } from "react-redux";
 import { useGetCharactersQuery } from "./redux/services/api";
 import {
-  setPageNumber,
   setFilteredData,
   setTotalPages,
 } from "./redux/slices/filtersSlice";
